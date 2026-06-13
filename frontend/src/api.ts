@@ -25,4 +25,15 @@ export const api = {
         body: JSON.stringify({ items }),
       }),
   },
+  coupons: {
+    apply: (code: string, cartTotal: number) =>
+      request<{ code: string; discountPct: number; originalTotal: number; discountedTotal: number; savings: number }>(
+        '/coupons/apply',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code, cartTotal }),
+        },
+      ),
+  },
 }
