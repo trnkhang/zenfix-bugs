@@ -1,0 +1,32 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { CartService } from './cart.service';
+import { BadRequestException } from '@nestjs/common';
+
+describe('CartService', () => {
+  let service: CartService;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [CartService],
+    }).compile();
+
+    service = module.get<CartService>(CartService);
+  });
+
+  it('should calculate total including item quantity', () => {
+    const dto = {
+      items: [
+        { price: 10.00, quantity: 3 },
+        { price: 5.00, quantity: 2 },
+      ],
+    };
+    const result = service.checkout(dto as any);
+    // 3 * 10.00 + 2 * 5.00 = 30 + 10 = 40
+    expect(result.total).toBe(40);
+    expect(result.itemCount).toBe(2);
+  });
+
+  it('should throw BadRequestException for empty cart', () => {
+    expect(() => service.checkout({ items: [] } as any)).toThrow(BadRequestException);
+  });
+});
